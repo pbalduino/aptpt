@@ -1,6 +1,6 @@
 /* Aptoide CSS */
 @media (max-width: 799px) {
-  .cell {
+  div.cell {
     width: 100%;
     float: left;
     background-color: #eee;
@@ -8,28 +8,28 @@
 }
 
 @media (min-width: 800px) and (max-width: 1200px){
-  .cell {
+  div.cell {
     margin-right: 20px;
     width: calc((100% - 20px * 1) / 2);
     float: left;
     background-color: #eee;
   }
 
-  .cell:nth-child(2n+2) {
+  div.cell:nth-child(2n+2) {
     margin-right: 0;
     float: right;
   }
 }
 
 @media (min-width: 1201px){
-  .cell {
+  div.cell {
     margin-right: 20px;
     width: calc((100% - 20px * 2) / 3);
     float: left;
     background-color: #eee;
   }
-  
-  .cell:nth-child(3n+3) {
+
+  div.cell:nth-child(3n+3) {
     margin-right: 0;
     float: right;
   }
@@ -37,6 +37,7 @@
 
 html {
   box-sizing: border-box;
+  font-family: Helvetica, Arial, sans-serif;
 }
 
 *,
@@ -45,19 +46,37 @@ html {
   box-sizing: inherit;
 }
 
-.container {
-  background-color: yellow;
+div.container {
+  background-color: #f3f3f3;
   max-width: 100%;
   padding-right: 20px;
   padding-left: 20px;
 }
 
-.container:after {
+div.container:after {
   display: table;
   clear: both;
   content: '';
 }
 
-.cell:last-child {
+div.cell {
+  margin-top: 1em;
+  padding: 1em;
+  background-color: white;
+  border-radius: 1.3em;
+  box-shadow: 0px 0px 2px 2px #ddd;
+}
+
+div.cell:last-child {
   margin-right: 0;
+}
+
+div.image {
+  float: left;
+  padding-right: 20px;
+}
+
+div.title {
+  float: left;
+  font-weight: bold;
 }
