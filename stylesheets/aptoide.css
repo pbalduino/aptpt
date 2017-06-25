@@ -2,7 +2,6 @@
    v2.0 | 20110126
    License: none (public domain)
 */
-
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -23,6 +22,7 @@ time, mark, audio, video {
 	font: inherit;
 	vertical-align: baseline;
 }
+
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
@@ -46,5 +46,42 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
-
 /* Aptoide CSS */
+html {
+  box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+.container {
+  background-color: yellow;
+  max-width: 100%;
+  padding-right: 20px;
+  padding-left: 20px;
+}
+
+.container:after {
+  display: table;
+  clear: both;
+  content: '';
+}
+
+.cell {
+  margin-right: 20px;
+  width: calc((100% - 20px * 2) / 3);
+  float: left;
+  background-color: #eee;
+}
+
+.cell:last-child {
+  margin-right: 0;
+}
+
+.cell:nth-child(3n+3) {
+  margin-right: 0;
+  float: right;
+}
