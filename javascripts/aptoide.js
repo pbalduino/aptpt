@@ -100,7 +100,12 @@ var fillScreen = function() {
 }
 
 element.addEventListener("scroll", function() {
-  console.log(element.scrollTop + element.clientHeight >= element.scrollHeight);
+  if(element.scrollTop + element.clientHeight >= element.scrollHeight) {
+    var cols = getColumnsByScreenSize();
+    for(var c = 0; c < cols; c++) {
+      createCell();
+    }    
+  }
 });
 
 element.addEventListener("resize", function(event) {
