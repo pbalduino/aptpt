@@ -60,6 +60,7 @@ div.container:after {
 }
 
 div.cell {
+  display: flex;
   margin-top: 1em;
   padding: 1em;
   background-color: white;
@@ -74,9 +75,32 @@ div.cell:last-child {
 div.image {
   float: left;
   padding-right: 20px;
+  width: 30%;
+}
+
+div.image img {
+  width: 100%;
+}
+
+div.info {
+  float: left;
+  width: calc(100% - (30% + 20px));
 }
 
 div.title {
-  float: left;
   font-weight: bold;
+  width: 100%;
+}
+
+div.tag-list {
+  position: relative;
+  top: calc(100% - 20px);
+}
+
+div.tag {
+  float: left;
+  background-color: #eee;
+  font-size: 0.8em;
+  text-transform: uppercase;
+  margin-right: 1em;
 }
