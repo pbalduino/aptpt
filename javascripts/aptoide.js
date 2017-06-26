@@ -1,3 +1,60 @@
+var DataSource = function(url) {
+  this._url = url;
+  this._photos = [];
+  this._wait = false;
+  this._page = 0;
+}
+
+DataSource.prototype.getURL = function() {
+  return this._url;
+}
+
+DataSource.prototype.getPhotos = function() {
+  return this._photos;
+}
+
+DataSource.prototype.setPhotos = function(photos) {
+  this._photos.items = photos;
+}
+
+DataSource.prototype.next = function() {
+  var self = this;
+
+  console.log("fetching", self._photos);
+
+  if(self._photos.length > 0) {
+    console.log('not empty');
+    return new Promise(function(res, rej) {
+      console.log('pr', self._photos);
+      res(self._photos.splice(0, 1)[0]);
+    });
+  } else {
+    self._page++;
+    return fetch(self._url + "&page=" + self._page, {method: 'get'})
+      .then(function(response) {
+        self._wait = false;
+        return response.json();
+      })
+      .then(function(j) {
+        self._photos = j.photos.photo;
+        return self.next();
+      });
+  }
+}
+
+var loadData = function(callback) {
+  var cols = getColumnsByScreenSize();
+
+  for(var c = 0; c < cols; c++) {
+    source.next().then(function(data) {
+      console.log("data", data);
+      callback(data);
+    });
+  }
+}
+
+var source = new DataSource("https://api.flickr.com/services/rest/?method=flickr.photos.getRecent&format=json&api_key=a4ae6131c95a2dc1b169b712a18cac28&nojsoncallback=1&per_page=5");
+console.log("source", source);
 var element = document.getElementById("container");
 
 var createDiv = function(className) {
@@ -19,23 +76,6 @@ var cropText = function(text) {
 
 var createCell = function(imageData) {
   console.log(imageData);
-  /*
-  <div class="cell">
-    <div class="image">
-      <img src="https://c1.staticflickr.com/3/2166/5813557536_51804db305_q.jpg" />
-    </div>
-    <div class="info">
-      <div class="title">
-        Any picture title
-      </div>
-      <div class="tag-list">
-        <div class="tag">tag 1</div>
-        <div class="tag">tag 2</div>
-        <div class="tag">tag 3</div>
-      </div>
-    </div>
-  </div>
-  */
 
   var cell = createDiv("cell");
 
@@ -99,34 +139,11 @@ var getColumnsByScreenSize = function() {
 }
 
 var fillScreen = function() {
-  console.log(element.scrollHeight, element.clientHeight);
-  for(var l = 0; l < 4; l++) {
-    loadData(createCell);
-  }
-}
-
-var loadData = function(callback) {
-  console.log("----");
-  var xhr = new XMLHttpRequest();
-
-  xhr.open('GET', 'https://api.flickr.com/services/rest/?method=flickr.photos.getRecent&format=json&api_key=a4ae6131c95a2dc1b169b712a18cac28&nojsoncallback=1&per_page=5');
-
-  xhr.onload = function() {
-    if (xhr.status === 200) {
-      var data = JSON.parse(xhr.responseText);
-      var photos = data.photos;
-      var cols = getColumnsByScreenSize();
-      var len = photos.photo.length;
-
-      for(var c = 0; c < cols && c < len; c++) {
-        callback(photos.photo[c]);
-      }
-
-    } else {
-      console.error(xhr);
+  source.next().then(function(data) {
+    for(var l = 0; l < 4; l++) {
+      loadData(createCell);
     }
-  };
-  xhr.send();
+  });
 }
 
 element.addEventListener("scroll", function() {
@@ -136,7 +153,3 @@ element.addEventListener("scroll", function() {
 });
 
 window.onload = fillScreen;
-
-window.onresize = function(event) {
-  console.log(event);
-}
