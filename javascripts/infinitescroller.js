@@ -1,6 +1,7 @@
-InfiniteScroller = function(element, dataSource) {
+InfiniteScroller = function(element, dataSource, tagLoader) {
   this._element = element;
   this._source = dataSource;
+  this._tags = tagLoader;
 }
 
 InfiniteScroller.prototype.loadData = function(callback) {
@@ -20,9 +21,12 @@ InfiniteScroller.prototype.createDiv = function(className) {
   return element;
 }
 
-InfiniteScroller.prototype.cropText = function(text) {
-  if(text.length > 20) {
-    return text.substring(0, 20) + "...";
+InfiniteScroller.prototype.cropText = function(text, len) {
+  var limit = len || 20;
+  console.log(limit, len, text);
+
+  if(text.length > limit) {
+    return text.substring(0, limit) + "...";
   } else if(text.trim() === ""){
     return "[No title]";
   } else {
@@ -31,6 +35,8 @@ InfiniteScroller.prototype.cropText = function(text) {
 }
 
 InfiniteScroller.prototype.createCell = function(imageData) {
+  var self = this;
+
   var cell = this.createDiv("cell");
 
   var image = this.createDiv("image");
@@ -51,11 +57,41 @@ InfiniteScroller.prototype.createCell = function(imageData) {
 
   var tagList = this.createDiv("tag-list");
 
-  for (var t = 0; t < 3; t++) {
-    var tag = this.createDiv("tag");
-    tag.innerHTML = "Tag " + (t + 1);
-    tagList.appendChild(tag);
-  }
+  var tagButton = this.createDiv("tag-button");
+  tagButton.innerHTML = "LOAD TAGS";
+  tagButton.onclick = function() {
+    self._tags.getTags(imageData.id).then(function(tags) {
+      var len = tags.length;
+
+      if(len == 0) {
+        tagButton.innerHTML = "No tags";
+        tagButton.disabled = true;
+        tagButton.className = "tag-disabled";
+
+        return;
+      }
+
+      tagList.removeChild(tagButton);
+
+      var frag = document.createDocumentFragment();
+
+      for(var t = 0; t < 3 && t < len; t++) {
+        var tag = self.createDiv("tag");
+        tag.innerHTML = self.cropText(tags[t].raw, 8);
+        frag.appendChild(tag);
+      }
+
+      if(len > 3) {
+        var tag = self.createDiv("tag");
+        tag.innerHTML = "...";
+        frag.appendChild(tag);
+      }
+
+      tagList.appendChild(frag);
+    })
+  };
+
+  tagList.appendChild(tagButton);
 
   info.appendChild(title);
   info.appendChild(tagList);

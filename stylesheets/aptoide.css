@@ -101,9 +101,27 @@ div.tag-list {
 }
 
 div.tag {
+  background-color: #ccc;
   float: left;
-  background-color: #eee;
-  font-size: 0.8em;
-  text-transform: uppercase;
-  margin-right: 1em;
+  position: relative;
+  margin-right: 5px;
+}
+
+
+div.tag-button, div.tag-disabled, div.tag {
+  border-radius: 1.5em;
+  color: white;
+  display: inline;
+  font-size: 0.7em;
+  padding: 0.5em 2em;
+}
+
+div.tag-button {
+  background-color: #888;
+  cursor: pointer;
+}
+
+div.tag-disabled {
+  background-color: #aaa;
+  cursor: default;
 }
