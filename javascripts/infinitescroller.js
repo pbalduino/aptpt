@@ -23,7 +23,6 @@ InfiniteScroller.prototype.createDiv = function(className) {
 
 InfiniteScroller.prototype.cropText = function(text, len) {
   var limit = len || 20;
-  console.log(limit, len, text);
 
   if(text.length > limit) {
     return text.substring(0, limit) + "...";
